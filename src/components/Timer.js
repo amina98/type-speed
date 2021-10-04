@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-const words = [
-    "Lorem ipsum dolor sit amet consectetur. 1",
-    "Lorem ipsum dolor sit amet consectetur.2",
-    "Lorem ipsum dolor sit amet consectetur.3",
-    "Lorem ipsum dolor sit amet consectetur.4",
-    "Lorem ipsum dolor sit amet consectetur.5",
-];
-const randomWord = () => {
-    return words[Math.floor(Math.random() * words.length)];
-};
+//functions
+import { randomWord } from "../helper/functions";
+//components
+import Result from "./Result";
+
 const Timer = () => {
+    //states
     const [randWord, setRandWord] = useState();
     const [status, setStatus] = useState();
     const [time, setTime] = useState({
@@ -18,15 +14,16 @@ const Timer = () => {
         msec: 0,
     });
     const [timer, setTimer] = useState(0);
-    const [data, setData] = useState(false);
+    const [result, setResult] = useState(false);
+    //mounting
     useEffect(() => {
         setRandWord(randomWord());
     }, []);
+    //changeHandler
     const changeHandler = (e) => {
         if (e.target.value === randWord) {
             clearInterval(timer);
-            setData(true);
-            console.log(data);
+            setResult(true);
         }
         if (randWord.includes(e.target.value)) {
             setStatus("نزدیکی");
@@ -34,7 +31,7 @@ const Timer = () => {
             setStatus("دور شدی");
         }
     };
-    const startAgain = () => {};
+    //focousHandler
     const focousHandler = () => {
         console.log("message");
         setTimer(
@@ -49,10 +46,11 @@ const Timer = () => {
             }, 10)
         );
     };
+
     return (
         <div className="container min-vh-100 d-flex flex-column justify-content-center align-items-center">
             <div className="row justify-content-center w-100">
-                <div className="col-6">
+                <div className="col-10 col-md-6">
                     <span className="mb-3 display-6 d-block text-end">
                         متن آزمایشی
                     </span>
@@ -60,7 +58,7 @@ const Timer = () => {
                 </div>
             </div>
             <div className="row w-100 justify-content-center">
-                <div className="col-6">
+                <div className="col-10 col-md-6">
                     <textarea
                         className="form-control"
                         onFocus={focousHandler}
@@ -70,51 +68,24 @@ const Timer = () => {
                 </div>
             </div>
             <div className="row w-100 justify-content-center">
-                <div className="col-6">
+                <div className="col-10 col-md-6">
                     <h3 className="bg-secondary">
                         <span className="badge">{status}</span>
                     </h3>
                 </div>
             </div>
             <div className="row w-100 justify-content-center">
-                <div className="col-3">
+                <div className="col-6 col-md-3">
                     <p className="text-success fs-4 fw-bolder">{`${time.min}:${time.sec}:${time.msec}`}</p>
                 </div>
 
-                <form className="col-3">
-                    <button
-                        className="btn btn-primary w-100"
-                        type="submit"
-                        onClick={startAgain}
-                    >
+                <form className="col-6 col-md-3">
+                    <button className="btn btn-primary w-100" type="submit">
                         از نو
                     </button>
                 </form>
             </div>
-            {data && (
-                <div className="min-vw-100 min-vh-100 position-absolute row justify-content-center align-content-center align-items-center bg-light">
-                    <div className="col-6">
-                        <div className=" d-block">
-                            <p className="fs-5 bg-secondary p-4 rounded">
-                                سرعت تایپ شما
-                                <span className="fs-5 fw-bold text-info">
-                                    {" "}
-                                    {`${time.min}:${time.sec}:${time.msec}`}
-                                </span>{" "}
-                                می باشد. برای ادامه روی دکمه زیر کلیک کنید.
-                            </p>
-                        </div>
-                        <form className=" d-block">
-                            <button
-                                className="btn btn-primary w-100 btn-lg"
-                                type="submit"
-                            >
-                                از نو
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            )}
+            {result && <Result time={time} />}
         </div>
     );
 };
