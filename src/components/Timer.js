@@ -15,15 +15,32 @@ const Timer = () => {
     });
     const [timer, setTimer] = useState(0);
     const [result, setResult] = useState(false);
+    const [isTypeing, setIsTypeing] = useState(false);
     //mounting
     useEffect(() => {
         setRandWord(randomWord());
-    }, []);
+        if (isTypeing) {
+            setTimer(
+                setInterval(() => {
+                    setTime({ ...time }, time.msec++);
+                    if (time.msec > 99) {
+                        setTime({ ...time }, (time.msec = 0), time.sec++);
+                    }
+                    if (time.sec > 59) {
+                        setTime({ ...time }, (time.sec = 0), time.min++);
+                    }
+                }, 10)
+            );
+        }
+    },[isTypeing]);
     //changeHandler
     const changeHandler = (e) => {
         if (e.target.value === randWord) {
             clearInterval(timer);
             setResult(true);
+        }
+        if (e.target.value != null) {
+            setIsTypeing(true);
         }
         if (randWord.includes(e.target.value)) {
             setStatus("نزدیکی");
@@ -34,19 +51,7 @@ const Timer = () => {
     //focousHandler
     const focousHandler = () => {
         console.log("message");
-        setTimer(
-            setInterval(() => {
-                setTime({ ...time }, time.msec++);
-                if (time.msec > 99) {
-                    setTime({ ...time }, (time.msec = 0), time.sec++);
-                }
-                if (time.sec > 59) {
-                    setTime({ ...time }, (time.sec = 0), time.min++);
-                }
-            }, 10)
-        );
     };
-
     return (
         <div className="container min-vh-100 d-flex flex-column justify-content-center align-items-center">
             <div className="row justify-content-center w-100">
